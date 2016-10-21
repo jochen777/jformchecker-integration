@@ -24,7 +24,7 @@ Remark: You only need this dependency. You don't need the jFormchecker dependenc
 
 ## Versions
 
-0.1.1 2016/10/19 Initial release
+0.1.1 2016/10/19 Initial release, new Facade for easy using
 
 
 
