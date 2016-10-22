@@ -1,0 +1,22 @@
+* Integrate with bean-validation:
+- add description annotation to specify description (if not avail, take property-name) (OK)
+- Automatic tranformation of bean to form (sniff types by property-Class:
+	boolean, (OK)
+	date, (OK)
+	String (OK)
+	)
+- copy form-values to this bean 
+- validation of form via bean-validation (connecting errors to form)
+- add type-annonation to specify type
+- switch to choose from label-> direct output or translated via messageSource
+
+
+https://docs.asp.net/en/latest/mvc/views/working-with-forms.html
+bool->checkbox
+String-> text
+Date->datetime
+Byte->Number
+Int->Number
+Single,Double->Number
+
+* Create form from bean, introduce custom annotations
