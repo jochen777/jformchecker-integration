@@ -3,6 +3,7 @@ package de.jformchecker.utils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -10,6 +11,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import de.jformchecker.FormCheckerElement;
 import de.jformchecker.FormCheckerForm;
 import de.jformchecker.elements.CheckboxInput;
+import de.jformchecker.elements.DateInputCompound;
 import de.jformchecker.elements.Label;
 import de.jformchecker.elements.TextInput;
 
@@ -52,7 +54,11 @@ public class BeanUtils {
 						if (fieldValue instanceof Boolean) {
 							el = CheckboxInput.build(name).setDescription(description)
 									.setPreSetValue(fieldValue.toString());
-						} else {
+						} else if (fieldValue instanceof LocalDate) {	// We prefer the Java 8 API!
+							LocalDate dateVal = (LocalDate)fieldValue; 
+							el = DateInputCompound.build(name).presetValue(java.sql.Date.valueOf(dateVal)).setDescription(description);
+						}
+						else {
 							el = TextInput.build(name).setDescription(description)
 									.setPreSetValue(fieldValue.toString());
 
