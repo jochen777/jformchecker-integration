@@ -1,6 +1,9 @@
 package de.jformchecker.utils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +11,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import de.jformchecker.FormCheckerElement;
+import de.jformchecker.elements.DateInputCompound;
 
 public class Utils {
 	public static void fillBean(List<FormCheckerElement> elements, Object bean)
@@ -15,13 +19,27 @@ public class Utils {
 		for (FormCheckerElement elem : elements) {
 			String key = elem.getName();
 			if (PropertyUtils.isWriteable(bean, key)) {
-				// RFE: Destinguish between Strings/Dates/Boolean...
-				PropertyUtils.setSimpleProperty(bean, key, elem.getValue());
+				Object propertyVal = PropertyUtils.getSimpleProperty(bean, key);
+				if (propertyVal instanceof String) {
+					PropertyUtils.setSimpleProperty(bean, key, elem.getValue());
+				} else if (propertyVal instanceof Boolean) {
+					if ("true".equals(elem.getValue())) {
+						PropertyUtils.setSimpleProperty(bean, key, true);
+					} else {
+						PropertyUtils.setSimpleProperty(bean, key, false);
+					}
+				} else if (propertyVal instanceof LocalDate) {
+					if (elem instanceof DateInputCompound) {
+						Date dateVal = ((DateInputCompound)elem).getDateValue();
+						LocalDate dateValLocalDate = new java.sql.Date( dateVal.getTime() ).toLocalDate();
+						PropertyUtils.setSimpleProperty(bean, key, dateValLocalDate);
+					}
+				}
+				
 			}
 		}
 	}
 
-	
 	/**
 	 * Return a nicely formated form of the form for debugging or other purposes
 	 */
@@ -42,5 +60,4 @@ public class Utils {
 		return debugOutput.toString();
 	}
 
-	
 }

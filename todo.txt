@@ -5,7 +5,8 @@
 	date, (OK)
 	String (OK)
 	)
-- copy form-values to this bean 
+- copy form-values to this bean (OK)
+- junit-tests for bean2form and form2bean
 - validation of form via bean-validation (connecting errors to form)
 - add type-annonation to specify type
 - switch to choose from label-> direct output or translated via messageSource
