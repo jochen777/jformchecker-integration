@@ -57,14 +57,19 @@ public class BeanUtils {
 						if (fieldValue instanceof Boolean) {
 							el = CheckboxInput.build(name).setDescription(description)
 									.setPreSetValue(fieldValue.toString());
-						} else if (fieldValue instanceof LocalDate) {	// We prefer the Java 8 API!
-							LocalDate dateVal = (LocalDate)fieldValue; 
-							el = DateInputCompound.build(name).presetValue(java.sql.Date.valueOf(dateVal)).setDescription(description);
-					} else if (fieldValue instanceof Integer) {	
-						Integer intVal = (Integer)fieldValue; 
-						el = NumberInput.build(name).presetIntValue(intVal).setDescription(description);
-					}
-						else {
+						} else if (fieldValue instanceof LocalDate) { // We
+																		// prefer
+																		// the
+																		// Java
+																		// 8
+																		// API!
+							LocalDate dateVal = (LocalDate) fieldValue;
+							el = DateInputCompound.build(name).presetValue(java.sql.Date.valueOf(dateVal))
+									.setDescription(description);
+						} else if (fieldValue instanceof Integer) {
+							Integer intVal = (Integer) fieldValue;
+							el = NumberInput.build(name).presetIntValue(intVal).setDescription(description);
+						} else {
 							el = TextInput.build(name).setDescription(description)
 									.setPreSetValue(fieldValue.toString());
 
@@ -97,14 +102,17 @@ public class BeanUtils {
 					} else {
 						PropertyUtils.setSimpleProperty(bean, key, false);
 					}
+				} else if (propertyVal instanceof Integer) {
+					// TBD: We need here try/catch??!
+					PropertyUtils.setSimpleProperty(bean, key, Integer.parseInt(elem.getValue()));
 				} else if (propertyVal instanceof LocalDate) {
 					if (elem instanceof DateInputCompound) {
-						Date dateVal = ((DateInputCompound)elem).getDateValue();
-						LocalDate dateValLocalDate = new java.sql.Date( dateVal.getTime() ).toLocalDate();
+						Date dateVal = ((DateInputCompound) elem).getDateValue();
+						LocalDate dateValLocalDate = new java.sql.Date(dateVal.getTime()).toLocalDate();
 						PropertyUtils.setSimpleProperty(bean, key, dateValLocalDate);
 					}
 				}
-				
+
 			}
 		}
 	}
