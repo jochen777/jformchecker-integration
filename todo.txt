@@ -6,6 +6,7 @@
 	String (OK)
 	)
 - copy form-values to this bean (OK)
+- Use NumberInput for converting number-bean vals. 
 - junit-tests for bean2form and form2bean
 - validation of form via bean-validation (connecting errors to form)
 - add type-annonation to specify type
