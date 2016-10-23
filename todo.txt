@@ -6,10 +6,12 @@
 	String (OK)
 	)
 - copy form-values to this bean (OK)
-- Use NumberInput for converting number-bean vals. 
+- Use NumberInput for converting number-bean vals. (OK)
 - junit-tests for bean2form and form2bean
 - validation of form via bean-validation (connecting errors to form)
 - add type-annonation to specify type
+- add more annotations/intelligence to get form from bean. (and to get it back)
+	(Idea: bean implements Interface, that provides a method, that influences the form) 
 - switch to choose from label-> direct output or translated via messageSource
 
 

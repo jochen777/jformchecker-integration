@@ -7,11 +7,19 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
 import de.jformchecker.FormCheckerElement;
 import de.jformchecker.FormCheckerForm;
+import de.jformchecker.FormValidator;
+import de.jformchecker.criteria.ValidationResult;
 import de.jformchecker.elements.CheckboxInput;
 import de.jformchecker.elements.DateInputCompound;
 import de.jformchecker.elements.Label;
@@ -29,8 +37,11 @@ public class BeanUtils {
 	public static FormCheckerForm fromBean(Object o) {
 		FormCheckerForm f = new FormCheckerForm() {
 
+			private Object connectedBean;
+
 			@Override
 			public void init() {
+				connectedBean = o;
 				Map<String, Object> elements;
 				try {
 					PropertyDescriptor[] p = PropertyUtils.getPropertyDescriptors(o);
@@ -83,7 +94,17 @@ public class BeanUtils {
 					e.printStackTrace();
 				}
 
+				// first, fill bean with result of form!
+				try {
+					BeanUtils.fillBean(this.getElements(), o);
+					addFormValidator(new BeanValidationFormValidator(o));
+				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
+
 		};
 		return f;
 	}
