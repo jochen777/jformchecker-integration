@@ -28,7 +28,7 @@ public class BeanValidationFormValidator implements FormValidator {
 	@Override
 	public void validate(FormCheckerForm form) {
 		try {
-			BeanUtils.fillBean(form.getElements(), bean);
+			BeanUtils.fillBean(form, bean);
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

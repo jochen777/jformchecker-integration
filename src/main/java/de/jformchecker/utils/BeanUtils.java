@@ -1,27 +1,20 @@
 package de.jformchecker.utils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.jformchecker.FormCheckerElement;
 import de.jformchecker.FormCheckerForm;
-import de.jformchecker.FormValidator;
-import de.jformchecker.criteria.ValidationResult;
 import de.jformchecker.elements.CheckboxInput;
 import de.jformchecker.elements.DateInputCompound;
+import de.jformchecker.elements.IgnoreFormElement;
 import de.jformchecker.elements.Label;
 import de.jformchecker.elements.NumberInput;
 import de.jformchecker.elements.TextInput;
@@ -33,6 +26,8 @@ import de.jformchecker.elements.TextInput;
  *
  */
 public class BeanUtils {
+	
+	final static Logger logger = LoggerFactory.getLogger(BeanUtils.class);
 
 	public static FormCheckerForm fromBean(Object o) {
 		FormCheckerForm f = new FormCheckerForm() {
@@ -42,21 +37,16 @@ public class BeanUtils {
 			@Override
 			public void init() {
 				connectedBean = o;
-				Map<String, Object> elements;
 				try {
-					PropertyDescriptor[] p = PropertyUtils.getPropertyDescriptors(o);
-					for (PropertyDescriptor pd : p) {
-						System.err.println("typ:" + pd.getPropertyType());
-						System.err.println(pd.getDisplayName());
-					}
-					elements = PropertyUtils.describe(o);
-					// elements.forEach((key, value) -> this.add(
-					//
-					// TextInput.build(key).setDescription(key).setPreSetValue(value.toString())
-					//
-					// ));
 
 					for (Field f : o.getClass().getDeclaredFields()) {
+						// check if it is ignored
+						IgnoreFormElement ignored = f.getAnnotation(IgnoreFormElement.class);
+						if (ignored != null) {
+							continue;
+						}
+						
+						
 						String name = f.getName();
 						Object fieldValue = PropertyUtils.getProperty(o, f.getName());
 						String description = name;
@@ -66,8 +56,10 @@ public class BeanUtils {
 						}
 						FormCheckerElement el;
 						if (fieldValue instanceof Boolean) {
-							el = CheckboxInput.build(name).setDescription(description)
-									.setPreSetValue(fieldValue.toString());
+							el = CheckboxInput.build(name).setDescription(description);
+							if (fieldValue != null) {
+								el.setPreSetValue(fieldValue.toString());
+							}
 						} else if (fieldValue instanceof LocalDate) { // We
 																		// prefer
 																		// the
@@ -80,9 +72,14 @@ public class BeanUtils {
 						} else if (fieldValue instanceof Integer) {
 							Integer intVal = (Integer) fieldValue;
 							el = NumberInput.build(name).presetIntValue(intVal).setDescription(description);
+							if (fieldValue != null) {
+								((NumberInput)el).presetIntValue(intVal);
+							}
 						} else {
-							el = TextInput.build(name).setDescription(description)
-									.setPreSetValue(fieldValue.toString());
+							el = TextInput.build(name).setDescription(description);
+							if (fieldValue != null) {
+								el.setPreSetValue(fieldValue.toString());
+							}
 
 						}
 						this.add(el);
@@ -96,7 +93,7 @@ public class BeanUtils {
 
 				// first, fill bean with result of form!
 				try {
-					BeanUtils.fillBean(this.getElements(), o);
+					BeanUtils.fillBean(this, o);
 					addFormValidator(new BeanValidationFormValidator(o));
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					// TODO Auto-generated catch block
@@ -106,11 +103,17 @@ public class BeanUtils {
 			}
 
 		};
+		// Run hook if bean wants it to tweak additional things
+		if (o instanceof FormCheckerBean) {
+			((FormCheckerBean)o).preRun(f);
+		}
 		return f;
 	}
 
-	public static void fillBean(List<FormCheckerElement> elements, Object bean)
+	public static void fillBean(FormCheckerForm form, Object bean)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		List<FormCheckerElement> elements = form.getElements();
+		
 		for (FormCheckerElement elem : elements) {
 			String key = elem.getName();
 			if (PropertyUtils.isWriteable(bean, key)) {
@@ -133,9 +136,15 @@ public class BeanUtils {
 						PropertyUtils.setSimpleProperty(bean, key, dateValLocalDate);
 					}
 				}
-
+			} else {
+				logger.info("unable to fill property coming from form: " + key);
 			}
 		}
+		// Run hook if bean wants it to get additionalThings out of the form
+		if (bean instanceof FormCheckerBean) {
+			((FormCheckerBean)bean).postRun(form);
+		}
 	}
+
 
 }
