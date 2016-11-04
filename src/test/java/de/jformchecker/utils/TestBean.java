@@ -7,6 +7,7 @@ public class TestBean {
 	String lastname;
 	LocalDate birthday;
 	boolean playsPiano;
+	int age;
 
 	public String getFirstname() {
 		return firstname;
@@ -39,4 +40,18 @@ public class TestBean {
 	public void setPlaysPiano(boolean playsPiano) {
 		this.playsPiano = playsPiano;
 	}
+
+  @Override
+  public String toString() {
+    return "TestBean [firstname=" + firstname + ", lastname=" + lastname + ", birthday=" + birthday
+        + ", playsPiano=" + playsPiano + "]";
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
 }
