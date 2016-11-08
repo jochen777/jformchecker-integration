@@ -1,9 +1,12 @@
 package de.jformchecker.adapter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.beanutils.PropertyUtils;
 
 import de.jformchecker.FormChecker;
 import de.jformchecker.FormCheckerConfig;
@@ -26,6 +29,23 @@ public class FC {
 		return fc;
 	}
 	
+	public static FC simpleFromBean(FormCheckerConfig config, Object bean, FormCheckerForm form) {
+		FC fc = new FC();
+			fc.fcInstance = FormChecker.build("id", key -> {
+				
+				try {
+					return ""+PropertyUtils.getProperty(bean, key);
+				} catch (Exception e) {
+					return "";
+				}
+			}
+				
+			, form)
+					.run();
+		
+		return fc;
+	}
+
 	public boolean isOk() {
 		if (fcInstance.isValidAndNotFirstRun()) {
 			return true;
