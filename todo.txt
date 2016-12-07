@@ -8,11 +8,11 @@
 - copy form-values to this bean (OK)
 - Use NumberInput for converting number-bean vals. (OK)
 - validation of form via bean-validation (connecting errors to form) (OK)
-- Create form from bean, introduce custom annotations
-- junit-tests for bean2form and form2bean
-- add type-annonation to specify type
 - add more annotations/intelligence to get form from bean. (and to get it back)
-	(Idea: bean implements Interface, that provides a method, that influences the form) 
+	(Idea: bean implements Interface, that provides a method, that influences the form)  (OK)
+- Create form from bean, introduce custom annotations (LongText, Button, Checkbox, DateInput, Hidden, Number, Password, Radio, Select, Text)
+- junit-tests for bean2form and form2bean
+- make reading from bean-params csrf safe (add two more fields to Beanadapter)
 - switch to choose from label-> direct output or translated via messageSource
 
 
