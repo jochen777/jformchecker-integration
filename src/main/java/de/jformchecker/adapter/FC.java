@@ -22,9 +22,32 @@ public class FC {
 
 	FormChecker fcInstance;
 	
+	/**
+	 * Normal, not xsrf secured formchecker from httpservletrequest
+	 * @param config
+	 * @param request
+	 * @param form
+	 * @return
+	 */
 	public static FC simple(FormCheckerConfig config, HttpServletRequest request, FormCheckerForm form) {
 		FC fc = new FC();
 		fc.fcInstance = FormChecker.build("id", key -> request.getParameter(key), form)
+				.setConfig(config)
+				.run();
+		return fc;
+	}
+	
+	/**
+	 * Normal, not xsrf secured formchecker from Parameter-Map (Useful in spring-controllers) 
+	 * @param config
+	 * @param paramMap
+	 * @param form
+	 * @return
+	 */
+	public static FC simple(FormCheckerConfig config, Map<String, String> paramMap, FormCheckerForm form) {
+		FC fc = new FC();
+		fc.fcInstance = FormChecker.build("id", key -> paramMap.get(key), form)
+				.setConfig(config)
 				.run();
 		return fc;
 	}
@@ -41,6 +64,7 @@ public class FC {
 			}
 				
 			, form)
+					.setConfig(config)
 					.run();
 		
 		return fc;
