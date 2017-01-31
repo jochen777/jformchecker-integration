@@ -52,7 +52,12 @@ public class BeanUtils {
 						}
 
 						String name = f.getName();
-						Object fieldValue = PropertyUtils.getProperty(o, f.getName());
+						Object fieldValue = null;
+						try {
+						fieldValue = PropertyUtils.getProperty(o, f.getName());
+						} catch (InvocationTargetException e) {
+							// field value is null, no problem
+						}
 						String description = name;
 						Label label = f.getAnnotation(Label.class);
 						if (label != null) {
@@ -108,7 +113,7 @@ public class BeanUtils {
 
 					}
 
-				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				} catch (IllegalAccessException  | NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InstantiationException e) {
@@ -155,7 +160,9 @@ public class BeanUtils {
 					}
 				} else if (className.equals("java.lang.Integer") || className.equals("int")) {
 					try {
-						PropertyUtils.setSimpleProperty(bean, key, Integer.parseInt(elem.getValue()));
+						if (elem.getValue() != null && !"".equals(elem.getValue())) {
+							PropertyUtils.setSimpleProperty(bean, key, Integer.parseInt(elem.getValue()));
+						}
 					} catch (NumberFormatException e) {
 						logger.info("unable to set int property because can not parse to int", e);
 					}

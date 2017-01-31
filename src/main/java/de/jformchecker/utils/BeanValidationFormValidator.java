@@ -38,9 +38,13 @@ public class BeanValidationFormValidator implements FormValidator {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		Set<ConstraintViolation<Object>> constraintViolations = validator.validate(bean);
-		constraintViolations.forEach(violation -> 
+		System.err.println("JOchen:" + Utils.getDebugOutput(form));
+		constraintViolations.forEach(violation -> {
+			System.err.println("LL:" + violation.getPropertyPath().toString());
+			System.err.println(form.getElement(violation.getPropertyPath().toString()));
 			form.getElement(violation.getPropertyPath().toString()).
-			setValidationResult(ValidationResult.failWithTranslated(violation.getMessage()))
+			setValidationResult(ValidationResult.failWithTranslated(violation.getMessage()));
+		}
 				);
 		constraintViolations.forEach(violation -> 
 		System.err.println("::" + violation.getPropertyPath().toString())

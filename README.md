@@ -25,6 +25,7 @@ Remark: You only need this dependency. You don't need the jFormchecker dependenc
 ## Versions
 
 0.1.1 2016/10/19 Initial release, new Facade for easy using
+0.1.3 2017/01/31 Update for Core 0.1.3
 
 
 
