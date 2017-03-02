@@ -31,7 +31,7 @@ public class RequestBuilders {
 	}
 
 	public static FormChecker buildFcWithEmptyRequest() {
-		return new FormChecker(RequestBuilders.FC_ID, RequestBuilders.buildEmptyHttpRequest());
+		return new FormChecker(RequestBuilders.buildEmptyHttpRequest());
 	}
 
 }
