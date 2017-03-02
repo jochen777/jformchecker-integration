@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import de.jformchecker.FormCheckerElement;
 import de.jformchecker.FormCheckerForm;
-import de.jformchecker.elements.AbstractInput;
 import de.jformchecker.elements.CheckboxInput;
 import de.jformchecker.elements.DateInputCompound;
 import de.jformchecker.elements.IgnoreFormElement;

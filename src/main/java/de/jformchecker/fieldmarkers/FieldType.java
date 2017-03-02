@@ -7,8 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import de.jformchecker.FormCheckerElement;
-import de.jformchecker.elements.AbstractInput;
-import de.jformchecker.elements.LongTextInput;
 
 @Target(ElementType.FIELD)
 @Inherited
