@@ -113,5 +113,11 @@ public class RecaptchaInput extends AbstractInput implements FormCheckerElement 
 			return false;
 		}
 	}
+	
+	@Override
+	public String getType() {
+		return "recaptcha";
+	}
+
 
 }
