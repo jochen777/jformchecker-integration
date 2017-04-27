@@ -30,7 +30,7 @@ public class FC {
 	 */
 	public static FC simple(FormCheckerConfig config, HttpServletRequest request, FormCheckerForm form) {
 		FC fc = new FC();
-		fc.fcInstance = FormChecker.build(key -> request.getParameter(key), form)
+		fc.fcInstance = FormChecker.build(key -> saveTrim(request.getParameter(key)), form)
 				.setConfig(config)
 				.run();
 		return fc;
@@ -45,7 +45,7 @@ public class FC {
 	 */
 	public static FC simple(FormCheckerConfig config, Map<String, String> paramMap, FormCheckerForm form) {
 		FC fc = new FC();
-		fc.fcInstance = FormChecker.build(key -> paramMap.get(key), form)
+		fc.fcInstance = FormChecker.build(key -> saveTrim(paramMap.get(key)), form)
 				.setConfig(config)
 				.run();
 		return fc;
@@ -91,7 +91,7 @@ public class FC {
 	public static FC secure(FormCheckerConfig config, HttpServletRequest request, FormCheckerForm form) {
 		FC fc = new FC();
 
-		fc.fcInstance = FormChecker.build(key -> request.getParameter(key), form).
+		fc.fcInstance = FormChecker.build(key -> saveTrim(request.getParameter(key)), form).
 				setProtectAgainstCSRF(
 				key -> request.getSession().getAttribute(key), 
 				(k,v)-> request.getSession().setAttribute(k, v)
@@ -104,5 +104,13 @@ public class FC {
 
 	public FormChecker getFcInstance() {
 		return fcInstance;
+	}
+	
+	private static String saveTrim(String t) {
+		if (t != null) {
+			return t.trim();
+		} else {
+			return null;
+		}
 	}
 }
