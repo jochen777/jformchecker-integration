@@ -30,4 +30,5 @@ Remark: You only need this dependency. You don't need the jFormchecker dependenc
 0.1.5 2017/02/09 Update for Core 0.1.5
 0.1.6-9 2017/xx/xx Update for Core 
 0.1.10 2017/04/27 Update for Core 0.1.10, add trim to elements
+0.1.10 2017/05/08 Update for Core 0.1.11
 
