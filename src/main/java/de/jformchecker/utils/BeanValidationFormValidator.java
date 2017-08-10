@@ -39,7 +39,6 @@ public class BeanValidationFormValidator implements FormValidator {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		Set<ConstraintViolation<Object>> constraintViolations = validator.validate(bean);
-		System.err.println("JOchen:" + Utils.getDebugOutput(form));
 		boolean formIsOkay = false;
 		if (constraintViolations.isEmpty()) {
 			formIsOkay = true;
