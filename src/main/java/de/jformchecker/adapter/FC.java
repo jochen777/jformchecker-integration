@@ -51,11 +51,14 @@ public class FC {
 		return fc;
 	}
 	
-	public static FC simpleFromBean(FormCheckerConfig config, Object bean, FormCheckerForm form) {
+	public static FC simpleFromBean(FormCheckerConfig config, Object bean, FormCheckerForm form, String submitted) {
 		FC fc = new FC();
 			fc.fcInstance = FormChecker.build(key -> {
 				
 				try {
+					if (FormChecker.SUBMIT_KEY.equals(key)) {
+						return submitted;
+					}
 					return ""+PropertyUtils.getProperty(bean, key);
 				} catch (Exception e) {
 					return "";

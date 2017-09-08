@@ -53,7 +53,7 @@ public class BeanUtils {
 						String name = f.getName();
 						Object fieldValue = null;
 						try {
-						fieldValue = PropertyUtils.getProperty(o, f.getName());
+						fieldValue = PropertyUtils.getSimpleProperty(o, f.getName());
 						} catch (InvocationTargetException e) {
 							// field value is null, no problem
 						}
