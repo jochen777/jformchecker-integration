@@ -26,7 +26,7 @@ import de.jformchecker.validator.Validator;
  * @author jochen
  *
  */
-public class RecaptchaInput extends AbstractInput implements FormCheckerElement {
+public class RecaptchaInput extends AbstractInput<RecaptchaInput> implements FormCheckerElement {
 
 	// Site specific key. Obtain that from google. Will be shown in html
 	String siteKey = null;
