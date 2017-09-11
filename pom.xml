@@ -4,7 +4,7 @@
 	<groupId>de.cyclon-softworx</groupId>
 	<artifactId>jformchecker-integration</artifactId>
 	<packaging>jar</packaging>
-	<version>0.1.15</version>
+	<version>0.1.16</version>
 	<name>jformchecker-integration</name>
 	<url>https://github.com/jochen777/jFormchecker-integration</url>
 	<description>jFormchecker integration utils that connects it to frameworks/APIs</description>
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>de.cyclon-softworx</groupId>
 			<artifactId>jformchecker</artifactId>
-			<version>0.1.15</version>
+			<version>0.1.16</version>
 		</dependency>
 
 		<dependency>
