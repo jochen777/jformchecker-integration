@@ -17,11 +17,13 @@ import de.jformchecker.elements.CheckboxInput;
 import de.jformchecker.elements.DateInputCompound;
 import de.jformchecker.elements.IgnoreFormElement;
 import de.jformchecker.elements.Label;
+import de.jformchecker.elements.LabelTranslationKey;
 import de.jformchecker.elements.LongTextInput;
 import de.jformchecker.elements.NumberInput;
 import de.jformchecker.elements.TextInput;
 import de.jformchecker.fieldmarkers.FieldType;
 import de.jformchecker.fieldmarkers.LongText;
+import de.jformchecker.message.MessageSource;
 
 /**
  * Helps working with Beans. Can transfer beans to forms and vice versa.
@@ -34,6 +36,10 @@ public class BeanUtils {
 	final static Logger logger = LoggerFactory.getLogger(BeanUtils.class);
 
 	public static FormCheckerForm fromBean(Object o) {
+		return BeanUtils.fromBeanWithMessage(o, null);
+	}
+	
+	public static FormCheckerForm fromBeanWithMessage(Object o, MessageSource messageSource) {
 		FormCheckerForm f = new FormCheckerForm() {
 
 			private Object connectedBean;
@@ -53,15 +59,11 @@ public class BeanUtils {
 						String name = f.getName();
 						Object fieldValue = null;
 						try {
-						fieldValue = PropertyUtils.getSimpleProperty(o, f.getName());
+							fieldValue = PropertyUtils.getSimpleProperty(o, f.getName());
 						} catch (InvocationTargetException e) {
 							// field value is null, no problem
 						}
-						String description = name;
-						Label label = f.getAnnotation(Label.class);
-						if (label != null) {
-							description = label.text();
-						}
+						String description = setupDescription(name, f, messageSource );
 						FormCheckerElement el;
 
 						LongText longTextMarked = f.getAnnotation(LongText.class);
@@ -131,12 +133,33 @@ public class BeanUtils {
 
 			}
 
+		
+
 		};
 		// Run hook if bean wants it to tweak additional things
 		if (o instanceof FormCheckerBean) {
 			((FormCheckerBean) o).preRun(f);
 		}
 		return f;
+	}
+	
+	private static String setupDescription(String name, Field f, MessageSource messageSource) {
+		String description = name;
+		Label label = f.getAnnotation(Label.class);
+		LabelTranslationKey labeltranslationKey = f.getAnnotation(LabelTranslationKey.class);
+		if (label != null && labeltranslationKey != null) {
+			throw new DoubleLabelException(name);
+		}
+		if (label != null) {
+			description = label.text();
+		}
+		if (labeltranslationKey != null) {
+			if (messageSource == null) {
+				throw new MissingMessageSourceException();
+			}
+			description = messageSource.getMessage(labeltranslationKey.value());
+		}
+		return description;
 	}
 
 	public static void fillBean(FormCheckerForm form, Object bean)
